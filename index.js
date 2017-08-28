@@ -15,6 +15,9 @@ var nlib        = require('nunjucks/src/lib');
 // default default format (ISO 8601)
 var dateFilterDefaultFormat = null;
 
+// locale
+var locale = null;
+
 // a date filter for Nunjucks
 // usage: {{ my_date | date(format) }}
 // see: <http://momentjs.com/docs/>
@@ -26,7 +29,12 @@ function dateFilter(date, format)
     var obj;
     Array.prototype.push.apply(args, arguments);
     try {
+        if(locale !== null && typeof locale === 'string') {
+            moment.locale(locale);
+        }
+
         obj = moment.utc(date);
+
     } catch (err) {
         errs.push(err);
     }
@@ -56,6 +64,11 @@ module.exports = dateFilter;
 // set default format for date
 module.exports.setDefaultFormat = function(format) {
     dateFilterDefaultFormat = format;
+};
+
+// set default format for date
+module.exports.setLocale = function(loc) {
+    locale = loc;
 };
 
 // install the filter to nunjucks environment
